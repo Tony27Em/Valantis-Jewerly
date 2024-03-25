@@ -22,6 +22,7 @@ $api.interceptors.response.use(
 
     if (response && response.status === 500 && !config._isRetry) {
       config._isRetry = true;
+      console.log('Идентификатор ошибки:', response.data);      
       return $api(config);        
     }
 

@@ -21,10 +21,11 @@ function App() {
       const { data: fieldsData } = await ApiService.getFields();
       const result = fieldsData.result.filter(item => item);
       const uniqueBrands = [...new Set(result)].sort().map(item => ({ value: item, label: item }));
-      
-      setIds(data.result);
+      const uniqueIds = [...new Set(data.result)];
+
+      setIds(uniqueIds);
       setBrandsList(uniqueBrands);
-    } catch (err) {
+    } catch (err: unknown) {
       console.log('Something went wrong with getting initial data', err);
     }
   }
@@ -66,7 +67,14 @@ function App() {
       try {
         const { data } = await ApiService.getItems(ids.slice(startIndex, endIndex));
         const uniqueItemsSet = new Set(data.result.map((item: ItemType) => item?.id));
-        const uniqueItems = Array.from(uniqueItemsSet, id => data.result.find((item: ItemType) => item.id === id));
+        let uniqueItems;
+
+        if (!!Object.keys(searchParams).length && ('brand' in searchParams)) {
+          uniqueItems = Array.from(uniqueItemsSet, id => data.result.find((item: ItemType) => item.brand && item.id === id));
+        } else {
+          uniqueItems = Array.from(uniqueItemsSet, id => data.result.find((item: ItemType) => item.id === id));
+        }
+
         setItems(uniqueItems as ItemType[]);
       } catch (err) {
         console.log('Something went wrong with getting items', err);

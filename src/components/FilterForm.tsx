@@ -66,7 +66,7 @@ const FilterForm: FC<FormType> = ({ loading, searchParams, getFilteredItems, han
       <div style={{ display: 'flex', gap: 20 }}>
         <Button
           type="primary"
-          disabled={!product && !price && !brand}
+          // disabled={!product && !price && !brand}
           onClick={() => handleSearch()}
         >
           Найти
